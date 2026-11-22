@@ -1,0 +1,1168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CSE 3154 | Web Programming Sessional</title>
+
+    <style>
+        :root {
+            --ink: #202938;
+            --muted: #5d6878;
+            --accent: #2457a7;
+            --soft: #f3f6fa;
+            --line: #dce3ec;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--soft);
+            color: var(--ink);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.65;
+        }
+
+        header {
+            background: var(--ink);
+            color: white;
+            padding: 42px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.7rem, 4vw, 2.5rem);
+        }
+
+        header p {
+            margin: 4px 0;
+            color: #dbe5f2;
+        }
+
+        .instructor {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 22px;
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 8px;
+            background: rgba(255,255,255,.08);
+        }
+
+        .instructor p {
+            margin: 2px 0;
+        }
+
+        .instructor-label {
+            color: #c5d3e5 !important;
+            font-size: .82rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .instructor-name {
+            font-size: 1.08rem;
+        }
+
+        .instructor-role {
+            color: #dbe5f2;
+            font-size: .92rem;
+        }
+
+        main {
+            width: min(920px, 92%);
+            margin: 28px auto 50px;
+        }
+
+        section {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 18px 0;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.35rem;
+        }
+
+        h3 {
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+
+        ul, ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        code, pre {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        code {
+            background: #edf1f6;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        /* Repository Structure */
+
+        .repo-window {
+            margin: 20px 0 14px;
+            overflow: hidden;
+            border: 1px solid #d9e1eb;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 8px 24px rgba(24,39,61,.07);
+        }
+
+        .repo-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 13px 17px;
+            background: #f7f9fc;
+            border-bottom: 1px solid #e5eaf1;
+        }
+
+        .repo-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: 700;
+        }
+
+        .repo-title svg {
+            width: 19px;
+            height: 19px;
+            color: #52657d;
+        }
+
+        .repo-caption {
+            color: #6b7788;
+            font-size: .82rem;
+        }
+
+        .copy-tree {
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: white;
+            color: #344256;
+            padding: 7px 10px;
+            font: 600 .8rem Arial, sans-serif;
+            cursor: pointer;
+        }
+
+        .copy-tree:hover {
+            background: #edf3fb;
+            border-color: #9fb5d2;
+        }
+
+        .tree {
+            padding: 17px 18px 19px;
+        }
+
+        .tree-row {
+            display: flex;
+            align-items: center;
+            min-height: 36px;
+            gap: 10px;
+            padding: 4px 9px;
+            border-radius: 6px;
+            color: #263449;
+            font: .91rem Consolas, "Courier New", monospace;
+        }
+
+        .tree-row:hover {
+            background: #f4f7fb;
+        }
+
+        .tree-row.root {
+            background: #edf4ff;
+            color: #174a91;
+            font-weight: 700;
+        }
+
+        .tree-row.level-1 {
+            padding-left: 29px;
+        }
+
+        .tree-row.level-2 {
+            padding-left: 57px;
+        }
+
+        .tree-row.level-3 {
+            padding-left: 85px;
+        }
+
+        .tree-icon {
+            width: 19px;
+            height: 19px;
+            flex: 0 0 19px;
+        }
+
+        .folder-icon {
+            color: #c18a28;
+        }
+
+        .file-icon {
+            color: #748399;
+        }
+
+        .tree-name {
+            overflow-wrap: anywhere;
+        }
+
+        .tree-meta {
+            margin-left: auto;
+            color: #8491a3;
+            font: .72rem Arial, sans-serif;
+        }
+
+        .file-tag {
+            margin-left: auto;
+            padding: 2px 7px;
+            border-radius: 5px;
+            background: #eef2f7;
+            color: #58677b;
+            font: 700 .65rem Arial, sans-serif;
+            letter-spacing: .03em;
+        }
+
+        .file-tag.pdf {
+            background: #fff0ef;
+            color: #b4433c;
+        }
+
+        .file-tag.html {
+            background: #fff4e7;
+            color: #a65a13;
+        }
+
+        .file-tag.css {
+            background: #eaf2ff;
+            color: #285ca8;
+        }
+
+        .file-tag.js {
+            background: #fff8d9;
+            color: #876d0d;
+        }
+
+        .tree-divider {
+            height: 1px;
+            background: #edf0f4;
+            margin: 8px 0 8px 27px;
+        }
+
+        .repo-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 11px 18px;
+            border-top: 1px solid #edf0f4;
+            background: #fbfcfe;
+            color: #667386;
+            font: .78rem Arial, sans-serif;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #c18a28;
+        }
+
+        .legend-dot.file {
+            background: #748399;
+        }
+
+        /* Notes and deadline */
+
+        .note {
+            background: #eef4ff;
+            border-left: 4px solid var(--accent);
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-top: 12px;
+            line-height: 1.55;
+        }
+
+        .deadline {
+            font-weight: bold;
+            color: #9b2c2c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid var(--line);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f3f8;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 10px 20px 30px;
+        }
+
+        /* Mobile Responsive */
+
+        @media (max-width: 600px) {
+
+            section {
+                padding: 18px;
+            }
+
+            .repo-toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .tree {
+                padding: 12px 8px;
+                overflow-x: auto;
+            }
+
+            .tree-row {
+                min-width: 360px;
+                font-size: .82rem;
+            }
+
+            .tree-row.level-1 {
+                padding-left: 20px;
+            }
+
+            .tree-row.level-2 {
+                padding-left: 40px;
+            }
+
+            .tree-row.level-3 {
+                padding-left: 60px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Course Header -->
+
+    <header>
+
+        <h1>Web Programming Sessional</h1>
+
+        <p><strong>Course Code: CSE 3154</strong></p>
+
+        <div class="instructor">
+
+            <p class="instructor-label">Instructed by</p>
+
+            <p class="instructor-name">
+                <strong>Md. Rakibul Islam</strong>
+            </p>
+
+            <p class="instructor-role">
+                Lecturer, Department of ETE
+            </p>
+
+        </div>
+
+        <p>Lecture 01 — Introduction to the course and GitHub workflow</p>
+
+        <p>Lab date: 17 November 2026</p>
+
+    </header>
+
+
+    <main>
+
+        <!-- Section 1 -->
+
+        <section>
+
+            <h2>1. Course Overview</h2>
+
+            <p>
+                This session introduced the Web Programming Sessional
+                course and the technologies that will be used during
+                the laboratory work.
+            </p>
+
+            <p>The technologies mentioned in class are:</p>
+
+            <ul>
+
+                <li>
+                    <strong>HTML:</strong>
+                    Creates the structure and content of a web page.
+                </li>
+
+                <li>
+                    <strong>CSS:</strong>
+                    Controls the appearance and layout of a web page.
+                </li>
+
+                <li>
+                    <strong>JavaScript:</strong>
+                    Adds interaction and dynamic behaviour to a web page.
+                </li>
+
+                <li>
+                    <strong>PHP:</strong>
+                    Runs server-side code and can process data sent
+                    from a web page.
+                </li>
+
+                <li>
+                    <strong>MySQL:</strong>
+                    Stores and manages data in a database.
+                </li>
+
+            </ul>
+
+            <div class="note">
+
+                <strong>Basic learning order:</strong>
+                Start with HTML, then learn CSS and JavaScript.
+                PHP and MySQL are used for server-side programming
+                and database work.
+
+            </div>
+
+        </section>
+
+
+        <!-- Section 2 -->
+
+        <section>
+
+            <h2>2. Creating a GitHub Account</h2>
+
+            <ol>
+
+                <li>
+                    Visit
+                    <a href="https://github.com/" target="_blank">
+                        github.com
+                    </a>.
+                </li>
+
+                <li>Select <strong>Sign up</strong>.</li>
+
+                <li>
+                    Enter an email address, create a password
+                    and choose a username.
+                </li>
+
+                <li>Complete the verification steps.</li>
+
+                <li>
+                    Verify the email address if GitHub asks you to do so.
+                </li>
+
+                <li>Sign in to the account.</li>
+
+            </ol>
+
+        </section>
+
+
+        <!-- Section 3 -->
+
+        <section>
+
+            <h2>3. Creating the Course Repository</h2>
+
+            <p>
+                A repository (repo) is a place on GitHub where project
+                files, source code and documents are stored.
+            </p>
+
+            <ol>
+
+                <li>
+                    Sign in to GitHub and click the <strong>+</strong> icon.
+                </li>
+
+                <li>
+                    Select <strong>New repository</strong>.
+                </li>
+
+                <li>
+                    Enter a repository name. The board appears to show
+                    <code>2304001_CSE_3154</code>; use your own roll
+                    number if that number is not yours.
+                </li>
+
+                <li>
+                    Choose <strong>Public</strong> or
+                    <strong>Private</strong>, according to the
+                    course instruction.
+                </li>
+
+                <li>Click <strong>Create repository</strong>.</li>
+
+            </ol>
+
+            <p>
+                <strong>Suggested repository name:</strong>
+                <code>YOUR_ROLL_CSE_3154</code>
+            </p>
+
+        </section>
+
+
+        <!-- Section 4 -->
+
+        <section>
+
+            <h2>4. Suggested Repository Structure</h2>
+
+            <p>
+                Keep each lab in a separate folder. Upload both
+                the report PDF and the code files for that lab.
+            </p>
+
+
+            <div class="repo-window">
+
+                <!-- Repository Toolbar -->
+
+                <div class="repo-toolbar">
+
+                    <div>
+
+                        <div class="repo-title">
+
+                            <svg viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8">
+
+                                <path d="M3.5 6.5h6l2 2h9v10.8
+                                a1.2 1.2 0 0 1-1.2 1.2H4.7
+                                a1.2 1.2 0 0 1-1.2-1.2z"/>
+
+                                <path d="M3.5 6.5V4.7
+                                a1.2 1.2 0 0 1 1.2-1.2h4.2l2 2h4"/>
+
+                            </svg>
+
+                            <span>Repository structure</span>
+
+                        </div>
+
+                        <div class="repo-caption">
+                            Example layout for your CSE 3154 course repository
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="copy-tree"
+                        type="button"
+                        onclick="copyRepositoryTree(this)">
+
+                        Copy structure
+
+                    </button>
+
+                </div>
+
+
+                <!-- File Explorer -->
+
+                <div class="tree">
+
+
+                    <!-- Root Folder -->
+
+                    <div class="tree-row root">
+
+                        <svg class="tree-icon folder-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+
+                            <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h5l2 2H19
+                            a2 2 0 0 1 2 2v9.2
+                            a2.8 2.8 0 0 1-2.8 2.8H5.8
+                            A2.8 2.8 0 0 1 3 17.2z"/>
+
+                        </svg>
+
+                        <span class="tree-name">
+                            YOUR_ROLL_CSE_3154
+                        </span>
+
+                        <span class="tree-meta">root folder</span>
+
+                    </div>
+
+
+                    <!-- README -->
+
+                    <div class="tree-row level-1">
+
+                        <svg class="tree-icon file-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path d="M6 3.8h8l4 4v12.4H6z"/>
+                            <path d="M14 3.8v4h4M8.5 12h7M8.5 15.5h7"/>
+
+                        </svg>
+
+                        <span class="tree-name">README.md</span>
+
+                        <span class="file-tag">MD</span>
+
+                    </div>
+
+
+                    <div class="tree-divider"></div>
+
+
+                    <!-- Lab 01 -->
+
+                    <div class="tree-row level-1">
+
+                        <svg class="tree-icon folder-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+
+                            <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h5l2 2H19
+                            a2 2 0 0 1 2 2v9.2
+                            a2.8 2.8 0 0 1-2.8 2.8H5.8
+                            A2.8 2.8 0 0 1 3 17.2z"/>
+
+                        </svg>
+
+                        <span class="tree-name">Lab-01</span>
+
+                        <span class="tree-meta">folder</span>
+
+                    </div>
+
+
+                    <!-- Report Folder -->
+
+                    <div class="tree-row level-2">
+
+                        <svg class="tree-icon folder-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+
+                            <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h5l2 2H19
+                            a2 2 0 0 1 2 2v9.2
+                            a2.8 2.8 0 0 1-2.8 2.8H5.8
+                            A2.8 2.8 0 0 1 3 17.2z"/>
+
+                        </svg>
+
+                        <span class="tree-name">Report</span>
+
+                        <span class="tree-meta">folder</span>
+
+                    </div>
+
+
+                    <!-- PDF -->
+
+                    <div class="tree-row level-3">
+
+                        <svg class="tree-icon file-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path d="M6 3.8h8l4 4v12.4H6z"/>
+                            <path d="M14 3.8v4h4M8.5 12h7M8.5 15.5h7"/>
+
+                        </svg>
+
+                        <span class="tree-name">
+                            Lab-01-Report.pdf
+                        </span>
+
+                        <span class="file-tag pdf">PDF</span>
+
+                    </div>
+
+
+                    <!-- Code Folder -->
+
+                    <div class="tree-row level-2">
+
+                        <svg class="tree-icon folder-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+
+                            <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h5l2 2H19
+                            a2 2 0 0 1 2 2v9.2
+                            a2.8 2.8 0 0 1-2.8 2.8H5.8
+                            A2.8 2.8 0 0 1 3 17.2z"/>
+
+                        </svg>
+
+                        <span class="tree-name">Code</span>
+
+                        <span class="tree-meta">folder</span>
+
+                    </div>
+
+
+                    <!-- HTML File -->
+
+                    <div class="tree-row level-3">
+
+                        <svg class="tree-icon file-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path d="M6 3.8h8l4 4v12.4H6z"/>
+                            <path d="M14 3.8v4h4M8.5 12h7M8.5 15.5h7"/>
+
+                        </svg>
+
+                        <span class="tree-name">index.html</span>
+
+                        <span class="file-tag html">HTML</span>
+
+                    </div>
+
+
+                    <!-- CSS File -->
+
+                    <div class="tree-row level-3">
+
+                        <svg class="tree-icon file-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path d="M6 3.8h8l4 4v12.4H6z"/>
+                            <path d="M14 3.8v4h4M8.5 12h7M8.5 15.5h7"/>
+
+                        </svg>
+
+                        <span class="tree-name">style.css</span>
+
+                        <span class="file-tag css">CSS</span>
+
+                    </div>
+
+
+                    <!-- JavaScript File -->
+
+                    <div class="tree-row level-3">
+
+                        <svg class="tree-icon file-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path d="M6 3.8h8l4 4v12.4H6z"/>
+                            <path d="M14 3.8v4h4M8.5 12h7M8.5 15.5h7"/>
+
+                        </svg>
+
+                        <span class="tree-name">script.js</span>
+
+                        <span class="file-tag js">JS</span>
+
+                    </div>
+
+
+                    <div class="tree-divider"></div>
+
+
+                    <!-- Lab 02 -->
+
+                    <div class="tree-row level-1">
+
+                        <svg class="tree-icon folder-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+
+                            <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h5l2 2H19
+                            a2 2 0 0 1 2 2v9.2
+                            a2.8 2.8 0 0 1-2.8 2.8H5.8
+                            A2.8 2.8 0 0 1 3 17.2z"/>
+
+                        </svg>
+
+                        <span class="tree-name">Lab-02</span>
+
+                        <span class="tree-meta">folder</span>
+
+                    </div>
+
+
+                    <div class="tree-row level-2">
+
+                        <svg class="tree-icon folder-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+
+                            <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h5l2 2H19
+                            a2 2 0 0 1 2 2v9.2
+                            a2.8 2.8 0 0 1-2.8 2.8H5.8
+                            A2.8 2.8 0 0 1 3 17.2z"/>
+
+                        </svg>
+
+                        <span class="tree-name">Report</span>
+
+                        <span class="tree-meta">folder</span>
+
+                    </div>
+
+
+                    <div class="tree-row level-2">
+
+                        <svg class="tree-icon folder-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor">
+
+                            <path d="M3 5.8A1.8 1.8 0 0 1 4.8 4h5l2 2H19
+                            a2 2 0 0 1 2 2v9.2
+                            a2.8 2.8 0 0 1-2.8 2.8H5.8
+                            A2.8 2.8 0 0 1 3 17.2z"/>
+
+                        </svg>
+
+                        <span class="tree-name">Code</span>
+
+                        <span class="tree-meta">folder</span>
+
+                    </div>
+
+
+                    <!-- More Labs -->
+
+                    <div class="tree-row level-1">
+
+                        <span class="tree-name">...</span>
+
+                        <span class="tree-meta">
+                            Continue the same pattern for each lab
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Legend -->
+
+                <div class="repo-legend">
+
+                    <span class="legend-item">
+                        <span class="legend-dot"></span>
+                        Folder
+                    </span>
+
+                    <span class="legend-item">
+                        <span class="legend-dot file"></span>
+                        File
+                    </span>
+
+                    <span class="legend-item">
+                        PDF = report
+                    </span>
+
+                    <span class="legend-item">
+                        HTML / CSS / JS = source code
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="note">
+
+                <strong>How to organise your work:</strong>
+
+                Keep each lab in its own folder. Inside it, create
+                separate <strong>Report</strong> and
+                <strong>Code</strong> folders.
+
+                Put the PDF report in <strong>Report</strong>
+                and all related source files in <strong>Code</strong>.
+
+            </div>
+
+
+            <div class="note">
+
+                The folder and file names above are a suggested
+                organisation method. Follow any different naming
+                format announced by the course teacher.
+
+            </div>
+
+        </section>
+
+
+        <!-- Section 5 -->
+
+        <section>
+
+            <h2>5. Uploading the Lab Report and Code</h2>
+
+            <h3>Using the GitHub website</h3>
+
+            <ol>
+
+                <li>Open your course repository.</li>
+
+                <li>
+                    Open the relevant lab folder, or create it using
+                    <strong>Add file → Create new file</strong>.
+
+                    A folder can be created by typing a path such as
+                    <code>Lab-01/README.md</code>.
+                </li>
+
+                <li>
+                    Choose
+                    <strong>Add file → Upload files</strong>.
+                </li>
+
+                <li>
+                    Select the lab report PDF and the code files
+                    from your computer.
+                </li>
+
+                <li>
+                    Check that the correct files and folder paths
+                    are shown.
+                </li>
+
+                <li>
+                    Enter a short commit message, such as
+                    <code>Upload Lab 01 report and code</code>.
+                </li>
+
+                <li>
+                    Click <strong>Commit changes</strong>.
+                </li>
+
+            </ol>
+
+            <p>
+                <strong>Important:</strong>
+                Upload the actual source code files (for example,
+                <code>.html</code>, <code>.css</code> and
+                <code>.js</code>) as well as the PDF report.
+
+                Uploading only screenshots or a PDF does not
+                provide the source code.
+            </p>
+
+        </section>
+
+
+        <!-- Section 6 -->
+
+        <section>
+
+            <h2>6. What Does "Commit" Mean?</h2>
+
+            <p>
+                A commit is a saved record of changes made to
+                the repository. A commit message briefly describes
+                what was uploaded or changed.
+            </p>
+
+            <p>Examples of useful commit messages:</p>
+
+            <ul>
+
+                <li>
+                    <code>Add Lab 01 HTML code</code>
+                </li>
+
+                <li>
+                    <code>Upload Lab 01 report PDF</code>
+                </li>
+
+                <li>
+                    <code>Update Lab 01 report and source files</code>
+                </li>
+
+            </ul>
+
+        </section>
+
+
+        <!-- Section 7 -->
+
+        <section>
+
+            <h2>7. Submission Deadline</h2>
+
+            <p>
+                According to the class instruction, the lab report
+                PDF and code must be uploaded and committed to GitHub
+                before the next lab day's deadline.
+            </p>
+
+            <p class="deadline">
+                Deadline: Before 12:00 PM (noon) on the next lab day.
+            </p>
+
+            <p>
+                After committing, open the repository and confirm
+                that the PDF and all required code files are visible.
+            </p>
+
+        </section>
+
+
+        <!-- Section 8 -->
+
+        <section>
+
+            <h2>8. Lab Submission Checklist</h2>
+
+            <ul>
+
+                <li>Create and verify a GitHub account.</li>
+
+                <li>Create the course repository.</li>
+
+                <li>Organise files by lab number.</li>
+
+                <li>Upload the lab report in PDF format.</li>
+
+                <li>Upload the corresponding source code files.</li>
+
+                <li>Write a meaningful commit message.</li>
+
+                <li>
+                    Commit the changes before 12:00 PM
+                    on the next lab day.
+                </li>
+
+                <li>
+                    Check the repository to confirm that the
+                    files were uploaded correctly.
+                </li>
+
+            </ul>
+
+        </section>
+
+    </main>
+
+
+    <!-- JavaScript: Copy Repository Structure -->
+
+    <script>
+
+        function copyRepositoryTree(button) {
+
+            const structure = `YOUR_ROLL_CSE_3154/
+├── README.md
+├── Lab-01/
+│   ├── Report/
+│   │   └── Lab-01-Report.pdf
+│   └── Code/
+│       ├── index.html
+│       ├── style.css
+│       └── script.js
+├── Lab-02/
+│   ├── Report/
+│   └── Code/
+└── ...`;
+
+            navigator.clipboard.writeText(structure)
+
+                .then(() => {
+
+                    const original = button.textContent;
+
+                    button.textContent = "Copied!";
+
+                    setTimeout(() => {
+
+                        button.textContent = original;
+
+                    }, 1500);
+
+                })
+
+                .catch(() => {
+
+                    button.textContent = "Copy unavailable";
+
+                });
+
+        }
+
+    </script>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>CSE 3154 — Web Programming Sessional</p>
+
+        <p>
+            Lecture 01 notes prepared from the classroom instructions.
+        </p>
+
+    </footer>
+
+</body>
+
+</html>
